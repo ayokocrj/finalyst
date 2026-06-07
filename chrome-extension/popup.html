@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --bg-color: #0f0f11;
+      --card-bg: #18181b;
+      --text-color: #f4f4f5;
+      --muted-text: #a1a1aa;
+      --primary-color: #3b82f6;
+      --primary-hover: #2563eb;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --border-color: #27272a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 16px;
+      width: 320px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      display: flex;
+      flex-col: column;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-b: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .description {
+      font-size: 13px;
+      color: var(--muted-text);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .target-info {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted-text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .info-value {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      background-color: var(--card-bg);
+      color: var(--muted-text);
+      border: 1px solid var(--border-color);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .status.loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--primary-color);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .status.success {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status.error {
+      display: block;
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--error-color);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .link-btn {
+      color: white;
+      background-color: var(--success-color);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      display: inline-block;
+      text-align: center;
+      margin-top: 4px;
+      transition: opacity 0.2s;
+    }
+
+    .link-btn:hover {
+      opacity: 0.9;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="logo.png" alt="Finalyst" id="logo-img">
+      <h1>Finalyst Deal Flow</h1>
+    </div>
+
+    <p class="description">Capture and import this company target directly into your Finalyst workstation to start an automated financial due diligence.</p>
+
+    <div class="target-info">
+      <div>
+        <div class="info-label">Page Title</div>
+        <div class="info-value" id="page-title">Loading...</div>
+      </div>
+      <div>
+        <div class="info-label">URL</div>
+        <div class="info-value" id="page-url">Loading...</div>
+      </div>
+    </div>
+
+    <button id="import-btn" class="btn" disabled>
+      Import Target as Deal
+    </button>
+
+    <div id="status-loading" class="status loading">
+      <span class="spinner"></span>
+      <span>Scraping & creating deal in Finalyst...</span>
+    </div>
+
+    <div id="status-success" class="status success">
+      <div>✓ Deal created successfully! Analyst IA has been triggered to perform target due diligence.</div>
+      <a href="#" id="view-deal-link" class="link-btn" target="_blank">Open Deal in Dashboard</a>
+    </div>
+
+    <div id="status-error" class="status error">
+      Failed to import deal. Make sure you are logged in to the Finalyst platform at http://localhost:3000.
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
